@@ -79,18 +79,13 @@ int sandbox(void (*f)(void), unsigned int timeout, bool verbose)
     {
         int sig = WTERMSIG(status);
 
-        if (sig == SIGALRM)
-        {
-            if (verbose)
-                printf("Bad function: timed out after %u seconds\n", timeout);
-        }
-        else
+        // Child died due to a signal (including child SIGALRM)
+        if (verbose)
         {
             const char *desc = strsignal(sig);
             if (!desc)
                 desc = "Unknown signal";
-            if (verbose)
-                printf("Bad function: %s\n", desc);
+            printf("Bad function: %s\n", desc);
         }
         return 0;
     }
